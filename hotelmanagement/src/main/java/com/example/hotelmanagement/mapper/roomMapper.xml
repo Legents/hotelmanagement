@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.hotelmanagement.mapper.roomMapper">
+
+    <select id="queryAllRoom" resultType="com.example.hotelmanagement.entity.room">
+        select * from room;
+    </select>
+
+    <select id="queryTypeIdByName" resultType="int">
+        select typeId from roomtype where typeName=#{roomType};
+    </select>
+
+    <insert id="addRoom">
+        insert into room(roomId,roomType) values(#{roomId},#{roomType});
+    </insert>
+
+    <update id="addRoomNumber">
+        update roomType set typeNumber = typeNumber + 1 where typeId = #{typeId}
+    </update>
+
+    <select id="queryAllId" resultType="String">
+        select roomId from room
+    </select>
+</mapper>

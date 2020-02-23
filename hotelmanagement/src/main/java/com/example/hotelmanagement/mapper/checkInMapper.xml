@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.hotelmanagement.mapper.checkInMapper">
+    <select id="queryAll" resultType="com.example.hotelmanagement.entity.checkIn">
+        select * from checkIn;
+    </select>
+    <select id="getRoom" resultType="com.example.hotelmanagement.entity.room">
+        select * from hotelmanagement.room where
+            roomType = (select typeId from hotelmanagement.roomtype where typeName=#{roomType})
+                and state = 0 limit #{roomNumber};
+    </select>
+
+    <select id="getCheckIn" resultType="com.example.hotelmanagement.entity.checkIn">
+        select * from hotelmanagement.checkIn where roomId like #{roomId};
+    </select>
+
+    <update id="changeStateToTrue">
+        update room set state=1 where roomId=#{roomId}
+    </update>
+
+    <update id="changeStateToFalse">
+        update room set state=0 where roomId=#{roomId}
+    </update>
+
+    <insert id="bookToCheckIn">
+        insert into CheckIn(bookId,arrive,depart,money,roomId,phone,waiter)
+            values(#{bookId},#{arrive},#{depart},#{money},#{roomId},#{phone},#{waiter})
+    </insert>
+
+    <insert id="toCheckOut">
+        insert into history(bookId,arrive,depart,money,state,roomId,phone,waiter,checkOutWaiter)
+            values(#{bookId},#{arrive},#{depart},#{money},#{state},#{roomId},#{phone},#{waiter},#{checkOutWaiter})
+    </insert>
+
+    <delete id="deleteBook">
+        delete from book where bookId=#{bookId}
+    </delete>
+
+    <delete id="deleteCheckIn" parameterType="String">
+        delete from checkIn where bookId=#{bookId}
+    </delete>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hotelmanagement.mapper.staffMapper">
+
+    <!--    <select id="FindUser" parameterType="demo.entity.Waiter" resultType="int">-->
+    <!--        select count(*) from waiter where account=#{account} and password=#{password}-->
+    <!--    </select>-->
+    <select id="queryStaff" parameterType="com.example.hotelmanagement.entity.Waiter" resultType="int">
+
+        select count(*)from waiter where account=#{account} or idNumber=#{idNumber};
+    </select>
+
+    <select id="viewAllStaff" resultType="com.example.hotelmanagement.entity.Waiter">
+        select * from waiter;
+    </select>
+
+    <insert id="addStaff" parameterType="com.example.hotelmanagement.entity.Waiter">
+        insert into waiter (account,password,name,idNumber,phone,address)values(#{account},#{password},#{name},#{idNumber},#{phone},#{address});
+    </insert>
+
+    <delete id="delete" parameterType="String">
+        delete from waiter where account=#{account};
+    </delete>
+
+    <select id="editStaff" parameterType="String" resultType="com.example.hotelmanagement.entity.Waiter">
+        select * from waiter where account=#{account};
+    </select>
+
+    <update id="editSubmit" parameterType="com.example.hotelmanagement.entity.Waiter">
+        update waiter set account=#{account},password=#{password},name=#{name},idNumber=#{idNumber},phone=#{phone},address=#{address} where account=#{account};
+    </update>
+
+</mapper>

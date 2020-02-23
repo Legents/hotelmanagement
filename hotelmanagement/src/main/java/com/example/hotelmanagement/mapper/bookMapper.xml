@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.hotelmanagement.mapper.bookMapper">
+    <select id="queryRemainByDate" resultType="com.example.hotelmanagement.entity.remainRoom">
+        select v_roomType_number.typeName,v_roomType_number.typeNumber-ifnull(sum(v_orderstate.roomNumber),0) as typeNumber
+            from v_roomType_number,v_orderstate
+                where v_roomType_number.typeName=#{typeName} and v_orderstate.roomType=#{typeName}
+                    and (date(#{date,jdbcType=DATE}) between v_orderState.arrive and v_orderState.depart) ;
+    </select>
+
+    <select id="queryRemainByName" resultType="com.example.hotelmanagement.entity.remainRoom">
+        SELECT * FROM hotelmanagement.v_roomtype_number where typeName=#{typeName};
+    </select>
+
+
+
+    <select id="sumPrice" resultType="int">
+        select ceil(sum(money)) from history where phone=#{phone} and state='正常入住';
+    </select>
+
+    <select id="getRoom" resultType="com.example.hotelmanagement.entity.room">
+        select * from hotelmanagement.room where
+            roomType = (select typeId from hotelmanagement.roomtype where typeName=#{roomType})
+                and state = 0 limit #{roomNumber};
+    </select>
+
+
+    <insert id="bookFailed">
+        insert into history(bookId,arrive,depart,state,phone,waiter)
+            values(#{book1.bookId},#{book1.arrive},#{book1.depart},'房间不足，预定失败',#{book1.phone},#{waiter})
+    </insert>
+
+    <update id="changeBookState">
+        update book set response = '预定成功' where bookId=#{bookId}
+    </update>
+
+    <select id="queryBookByBookId" resultType="com.example.hotelmanagement.entity.book" >
+        select * from book where bookId=#{bookId};
+    </select>
+    <select id="queryAll" resultType="com.example.hotelmanagement.entity.book" >
+        select * from book where response='预定成功' or response='待处理'  order by response asc;
+    </select>
+    <insert id="bookToHistory">
+        insert into history(bookId, arrive, depart, money, phone, state)
+            values(#{bookId},#{arrive},#{depart},#{money},#{phone},#{state});
+    </insert>
+
+    <delete id="deleteBook">
+        delete from book where bookId = #{bookId}
+    </delete>
+
+    <update id="payOrder">
+        update book set response = '待处理' where bookId=#{bookId} and response='待支付'
+    </update>
+
+
+    <select id="queryBookByPhone" resultType="com.example.hotelmanagement.entity.book" >
+        select * from book where phone=#{phone};
+    </select>
+
+    <select id="queryBookByPhoneAndArrive" resultType="com.example.hotelmanagement.entity.book" >
+        select * from book where phone=#{phone} and arrive=date(#{arrive});
+    </select>
+
+    <insert id="addOrder">
+        insert into book(roomType,roomNumber,arrive,depart,orderPrice,payState,phone)
+            values(#{roomType},#{roomNumber},#{arrive},#{depart},#{orderPrice},#{payState},#{phone});
+    </insert>
+</mapper>

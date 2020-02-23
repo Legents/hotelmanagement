@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.hotelmanagement.mapper.commentMapper">
+    <insert id="addComment" parameterType="com.example.hotelmanagement.entity.comment">
+        insert into comment(content,time,star,phone)
+	        values(#{content},now(),#{star},#{phone});
+    </insert>
+
+    <select id="queryComment" resultType="com.example.hotelmanagement.entity.comment">
+        select * from comment order by time desc;
+    </select>
+
+</mapper>
